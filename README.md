@@ -2,6 +2,8 @@
 
 Waarp Gateway Ftp: Service extension to [Waarp-R66](https://hub.docker.com/r/fjudith/waarp-r66/)
 
+![alt text](https://www.waarp.fr/i/schema-externe.png "Waarp Architecture")
+
 ## Docker image roadmap
 
 * [X] Password and SSL automation
