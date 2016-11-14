@@ -1,6 +1,7 @@
 # Instroduction
 
 Waarp Gateway Ftp: Service extension to [Waarp-R66](https://hub.docker.com/r/fjudith/waarp-r66/)
+<<<<<<< HEAD
 
 ![alt text](https://www.waarp.fr/i/schema-externe.png "Waarp Architecture")
 
@@ -10,6 +11,15 @@ Waarp Gateway Ftp: Service extension to [Waarp-R66](https://hub.docker.com/r/fju
 * [X] Transparent support of linked Mysql/MariaDB
 * [X] Transparent support of linked PostgreSQL
 * [X] SNMP support
+=======
+
+## Docker image roadmap
+
+[X] Password and SSL automation
+[X] Transparent support of linked Mysql/MariaDB
+[X] Transparent support of linked PostgreSQL
+[X] SNMP support
+>>>>>>> fe22828913e581088d30a10f6f1c8ac6256b9dce
 
 # Quick start
 Run the Waarp-GwFTP image
