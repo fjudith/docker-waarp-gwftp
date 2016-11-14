@@ -1,7 +1,6 @@
 # Instroduction
 
 Waarp Gateway Ftp: Service extension to [Waarp-R66](https://hub.docker.com/r/fjudith/waarp-r66/)
-<<<<<<< HEAD
 
 ![alt text](https://www.waarp.fr/i/schema-externe.png "Waarp Architecture")
 
