@@ -1,12 +1,14 @@
 #!/bin/sh
 # set -e
-
-export JAVAEXECCLIENT="java -cp ${GWFTP_CLASSPATH} ${LOGCLIENT} -Dfile.encoding=UTF-8 "
-export JAVAEXECSERVER="java -cp ${GWFTP_CLASSPATH} ${LOGSERVER} -Dfile.encoding=UTF-8 "
-
 export SERVER_CONFIG="/etc/waarp/conf.d/${WAARP_APPNAME}/gwftp.xml"
 export CLIENT_CONFIG="/etc/waarp/conf.d/${WAARP_APPNAME}/client.xml"
 export R66CONF="/etc/waarp/conf.d/${R66_ENV_WAARP_APPNAME}/server.xml"
+
+export LOGSERVER=" -Dlogback.configurationFile=/etc/waarp/conf.d/${WAARP_APPNAME}/logback-gwftp.xml "
+export LOGCLIENT=" -Dlogback.configurationFile=/etc/waarp/conf.d/${WAARP_APPNAME}/logback-client.xml "
+
+export JAVAEXECCLIENT="java -cp ${GWFTP_CLASSPATH} ${LOGCLIENT} -Dfile.encoding=UTF-8 "
+export JAVAEXECSERVER="java -cp ${GWFTP_CLASSPATH} ${LOGSERVER} -Dfile.encoding=UTF-8 "
 
 ##################
 # GwFTP COMMANDS #

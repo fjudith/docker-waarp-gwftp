@@ -13,17 +13,16 @@ RUN yum install -y \
 
 RUN yum clean all
 
-# Download & deploy Waarp Gateway Ftp patch 3.0.4
-RUN pushd /tmp/ && \
-	curl -O https://dl.waarp.org/dist/waarp-gateway-ftp/3.0/waarp-gateway-ftp-${WAARP_GWFTP_VERSION}.zip && \
-	unzip -x /tmp/waarp-gateway-ftp-${WAARP_GWFTP_VERSION}.zip -d /tmp/ && \
-	cp -r /tmp/waarp-gateway-ftp-${WAARP_GWFTP_VERSION}/admin/* /usr/share/waarp/gwftp-admin/ && \
-	rm -rf /tmp/waarp-gateway-ftp-${WAARP_GWFTP_VERSION} && \
-	popd
+# Download & deploy Waarp Gateway Ftp 3.0.4
+RUN curl https://dl.waarp.org/repos/rhel6/waarp-gateway-ftp-3.0.4-1.el6.noarch.rpm -o /tmp/waarp-gateway-ftp.rpm
+RUN rpm -iv /tmp/waarp-gateway-ftp.rpm
+
 
 # Duplicate Waarp library
 RUN mkdir -p /usr/share/waarp/gwftp && \
 	cp -av /usr/share/waarp/r66-lib/* /usr/share/waarp/gwftp-lib/
+
+RUN rm -f /tmp/waarp*.rpm
 
 # Cleanup
 RUN pushd /usr/share/waarp/gwftp-lib/ && rm -f \
@@ -40,7 +39,7 @@ RUN pushd /usr/share/waarp/gwftp-lib/ && rm -f \
     mariadb-java-client-1.3.4.jar mysql-connector-java-5.1.35.jar \
     mysql-connector-java-5.1.36.jar netty-all-4.1.0.Beta5.jar \
     netty-all-4.1.0.CR3.jar postgresql-9.4-1201-jdbc4.jar \
-    postgresql-9.4-1206-jdbc4.jar slf4j-api-1.7.12.jar \
+    slf4j-api-1.7.12.jar \
     snmp4j-2.3.1.jar snmp4j-agent-2.2.2.jar \
     WaarpAdministrator-3.0.0.jar WaarpCommon-3.0.4.jar WaarpGatewayFtp-3.0.2.jar \
     WaarpCommon-3.0.6.jar WaarpDigest-3.0.0.jar \
@@ -94,7 +93,7 @@ ADD assets/conf.d/ /etc/waarp/conf.d/
 # Waarp log
 ENV GWFTP_CLASSPATH="/usr/share/waarp/gwftp-lib/WaarpGatewayFtp-${WAARP_GWFTP_VERSION}.jar:/usr/share/waarp/gwftp-lib/*"
 ENV SERVER_CONFIG="/etc/waarp/conf.d/${WAARP_APPNAME}/gwftp.xml"
-ENV CLIENT_CONFIG="/etc/waarp/conf.d/${WAARP_APPNAME}/client.xml"
+ENV CLIENT_CONFIG=${SERVER_CONFIG}
 ENV LOGSERVER=" -Dlogback.configurationFile=/etc/waarp/conf.d/${WAARP_APPNAME}/logback-gwftp.xml "
 ENV LOGCLIENT=" -Dlogback.configurationFile=/etc/waarp/conf.d/${WAARP_APPNAME}/logback-client.xml "
 
@@ -102,11 +101,13 @@ COPY supervisord.conf /etc/supervisord.conf
 COPY assets/init-functions /usr/share/waarp/
 COPY assets/*.sh /usr/share/waarp/
 RUN chmod +x /usr/share/waarp/* && \
-	. /usr/share/waarp/init-commands.sh
+    echo "export TERM=xterm-256color" >> ~/.bashrc && \
+    echo ". /usr/share/waarp/init-commands.sh" >> ~/.bashrc
+
+RUN mkdir -p /var/lib/waarp/gwftp/ftp
 
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
-RUN mkdir -p /var/lib/waarp/gwftp/ftp
 
 # GwFTP ports
 EXPOSE 6621
@@ -120,5 +121,3 @@ EXPOSE 50001-65534
 WORKDIR /usr/share/waarp
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-# ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["bash"]
